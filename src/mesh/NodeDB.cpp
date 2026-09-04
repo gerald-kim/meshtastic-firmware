@@ -661,6 +661,11 @@ NodeDB::NodeDB()
         config.display.displaymode = meshtastic_Config_DisplayConfig_DisplayMode_DEFAULT;
         config.bluetooth.enabled = true;
     }
+#elif defined(MESHTASTIC_KOREAN_INPUT)
+    // This target is an MUI-only Pager build. A temporary BaseUI recovery
+    // image can persist DEFAULT, which otherwise prevents tftSetup() from ever
+    // running when this image is restored.
+    config.display.displaymode = meshtastic_Config_DisplayConfig_DisplayMode_COLOR;
 #endif
 
     if (devicestateCRC != crc32Buffer(&devicestate, sizeof(devicestate)))
@@ -1086,9 +1091,9 @@ void NodeDB::installDefaultConfig(bool preserveKey = false)
     resetRadioConfig(true); // This also triggers NodeInfo/Position requests since we're fresh
     strncpy(config.network.ntp_server, "meshtastic.pool.ntp.org", 32);
 
-#if (defined(T_DECK) || defined(T_WATCH_S3) || defined(UNPHONE) || defined(PICOMPUTER_S3) || defined(SENSECAP_INDICATOR) ||      \
-     defined(ELECROW_PANEL) || defined(HELTEC_V4_TFT) || defined(HELTEC_V4_R8_TFT) || defined(RAK_WISMESH_TAP_V2) ||             \
-     defined(ELECROW_ThinkNode_M9) || defined(T_WATCH_ULTRA)) &&                                                                 \
+#if (defined(T_DECK) || defined(T_LORA_PAGER) || defined(T_WATCH_S3) || defined(UNPHONE) || defined(PICOMPUTER_S3) ||            \
+     defined(SENSECAP_INDICATOR) || defined(ELECROW_PANEL) || defined(HELTEC_V4_TFT) || defined(HELTEC_V4_R8_TFT) ||             \
+     defined(RAK_WISMESH_TAP_V2) || defined(ELECROW_ThinkNode_M9) || defined(T_WATCH_ULTRA)) &&                                  \
     HAS_TFT
     // switch BT off by default; use TFT programming mode or hotkey to enable
     config.bluetooth.enabled = false;
